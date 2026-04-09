@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hans Stewart — AI Systems Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#03040a;
+  --s1:#070810;
+  --s2:#0b0c18;
+  --s3:#0f1020;
+  --s4:#141528;
+  --b1:rgba(255,255,255,0.04);
+  --b2:rgba(255,255,255,0.07);
+  --b3:rgba(255,255,255,0.12);
+  --txt:#eeeef8;
+  --t2:#8888aa;
+  --t3:#44445a;
+  --t4:#22223a;
+  --teal:#00ffcc;--teal2:#00c9a0;--tealg:rgba(0,255,204,0.12);--teald:rgba(0,255,204,0.06);
+  --blue:#4d9fff;--blue2:#3b82f6;--blueg:rgba(77,159,255,0.12);--blued:rgba(77,159,255,0.06);
+  --purple:#b76fff;--purple2:#9b59f5;--purpleg:rgba(183,111,255,0.12);--purpled:rgba(183,111,255,0.06);
+  --orange:#ff8c42;--orange2:#f97316;--orangeg:rgba(255,140,66,0.12);--oranged:rgba(255,140,66,0.06);
+  --green:#39ff8a;--greend:rgba(57,255,138,0.08);
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Space Grotesk',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;background:var(--bg)}
+body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:1500px}
+
+/* ══ BACKGROUND ══ */
+.bg-wrap{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.hex-grid{position:absolute;inset:0;opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 0 L56 16 L56 50 L28 66 L0 50 L0 16Z' fill='none' stroke='rgba(0,255,204,0.04)' stroke-width='0.8'/%3E%3Cpath d='M28 66 L56 82 L56 100' fill='none' stroke='rgba(0,255,204,0.04)' stroke-width='0.8'/%3E%3Cpath d='M28 66 L0 82 L0 100' fill='none' stroke='rgba(0,255,204,0.04)' stroke-width='0.8'/%3E%3C/svg%3E");
+  background-size:56px 100px}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(80px)}
+.orb1{width:700px;height:700px;top:-200px;left:-200px;background:radial-gradient(circle,rgba(0,255,204,0.05),transparent 70%)}
+.orb2{width:500px;height:500px;top:30%;right:-150px;background:radial-gradient(circle,rgba(77,159,255,0.05),transparent 70%)}
+.orb3{width:600px;height:600px;bottom:-200px;left:30%;background:radial-gradient(circle,rgba(183,111,255,0.04),transparent 70%)}
+.scan-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,204,0.08),transparent);animation:scandown 12s linear infinite}
+@keyframes scandown{0%{top:-1px}100%{top:100%}}
+
+/* ══ ANIMATED SVG PATHS ══ */
+.svg-connectors{position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:1}
+
+/* ══ LAYOUT ══ */
+.page{position:relative;z-index:2;padding:52px 60px;max-width:1640px;margin:0 auto}
+
+/* ══ HEADER ══ */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:60px;padding-bottom:36px;position:relative}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--teal),var(--blue),var(--purple),var(--orange),transparent)}
+
+.h-left{}
+.h-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.h-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--teal);background:var(--teald);border:1px solid rgba(0,255,204,0.18);padding:4px 12px;border-radius:20px}
+.h-version{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:0.1em}
+.h-title{font-size:46px;font-weight:700;letter-spacing:-0.035em;line-height:1.05;margin-bottom:8px}
+.h-title .accent{background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h-sub{font-family:var(--mono);font-size:11px;color:var(--t2);letter-spacing:0.06em}
+
+.h-right{display:flex;gap:1px}
+.hstat{background:var(--s1);border:1px solid var(--b1);padding:18px 22px;text-align:center;min-width:108px;position:relative;overflow:hidden}
+.hstat:first-child{border-radius:14px 0 0 14px}
+.hstat:last-child{border-radius:0 14px 14px 0}
+.hstat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.hstat:nth-child(1)::before{background:var(--teal)}
+.hstat:nth-child(2)::before{background:var(--blue)}
+.hstat:nth-child(3)::before{background:var(--purple)}
+.hstat:nth-child(4)::before{background:var(--orange)}
+.hv{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;margin-bottom:5px}
+.hstat:nth-child(1) .hv{color:var(--teal)}
+.hstat:nth-child(2) .hv{color:var(--blue)}
+.hstat:nth-child(3) .hv{color:var(--purple)}
+.hstat:nth-child(4) .hv{color:var(--orange)}
+.hk{font-size:10px;color:var(--t3);font-weight:500}
+
+/* ══ LAYER LABEL ══ */
+.ll{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.ll-tag{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--t2);background:var(--s2);border:1px solid var(--b1);padding:4px 12px;border-radius:5px;white-space:nowrap}
+.ll-line{flex:1;height:1px;background:linear-gradient(90deg,var(--b2),transparent)}
+
+/* ══ FLOW BRIDGE ══ */
+.bridge{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:6px 0;position:relative}
+.bridge-col{display:flex;flex-direction:column;align-items:center;gap:0}
+.bridge-dot{width:8px;height:8px;border-radius:50%;border:2px solid}
+.bridge-dot.teal{border-color:var(--teal);background:rgba(0,255,204,0.2);box-shadow:0 0 8px var(--teal)}
+.bridge-dot.blue{border-color:var(--blue);background:rgba(77,159,255,0.2);box-shadow:0 0 8px var(--blue)}
+.bridge-dot.purple{border-color:var(--purple);background:rgba(183,111,255,0.2);box-shadow:0 0 8px var(--purple)}
+.bridge-dot.orange{border-color:var(--orange);background:rgba(255,140,66,0.2);box-shadow:0 0 8px var(--orange)}
+.bridge-track{flex:1;width:2px;position:relative;overflow:visible}
+.bridge-track.teal{background:linear-gradient(180deg,rgba(0,255,204,0.4),rgba(0,255,204,0.1))}
+.bridge-track.blue{background:linear-gradient(180deg,rgba(77,159,255,0.4),rgba(77,159,255,0.1))}
+.bridge-track.purple{background:linear-gradient(180deg,rgba(183,111,255,0.4),rgba(183,111,255,0.1))}
+.bridge-track.orange{background:linear-gradient(180deg,rgba(255,140,66,0.4),rgba(255,140,66,0.1))}
+.particle{position:absolute;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%}
+.particle.teal{background:var(--teal);box-shadow:0 0 6px var(--teal);animation:fall 1.8s linear infinite}
+.particle.blue{background:var(--blue);box-shadow:0 0 6px var(--blue);animation:fall 2.2s linear infinite 0.4s}
+.particle.purple{background:var(--purple);box-shadow:0 0 6px var(--purple);animation:fall 1.9s linear infinite 0.8s}
+.particle.orange{background:var(--orange);box-shadow:0 0 6px var(--orange);animation:fall 2.1s linear infinite 0.2s}
+@keyframes fall{0%{top:-4px;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+.bridge-arrow{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent}
+.bridge-arrow.teal{border-top:8px solid rgba(0,255,204,0.5)}
+.bridge-arrow.blue{border-top:8px solid rgba(77,159,255,0.5)}
+.bridge-arrow.purple{border-top:8px solid rgba(183,111,255,0.5)}
+.bridge-arrow.orange{border-top:8px solid rgba(255,140,66,0.5)}
+
+/* ══ INPUT LAYER ══ */
+.input-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px}
+.in-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.in-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.in-icon.teal{background:var(--teald);border:1px solid rgba(0,255,204,0.12)}
+.in-icon.blue{background:var(--blued);border:1px solid rgba(77,159,255,0.12)}
+.in-icon.purple{background:var(--purpled);border:1px solid rgba(183,111,255,0.12)}
+.in-icon.orange{background:var(--oranged);border:1px solid rgba(255,140,66,0.12)}
+.in-label{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:3px}
+.in-label.teal{color:var(--teal)} .in-label.blue{color:var(--blue)} .in-label.purple{color:var(--purple)} .in-label.orange{color:var(--orange)}
+.in-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.in-detail{font-family:var(--mono);font-size:10px;color:var(--t3)}
+
+/* ══ AGENTS ══ */
+.agents-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:6px}
+
+/* glowing border animation */
+@keyframes borderRotate{0%{--angle:0deg}100%{--angle:360deg}}
+@property --angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+
+.ac{border-radius:18px;overflow:hidden;position:relative;background:var(--s1)}
+.ac::before{content:'';position:absolute;inset:-1px;border-radius:19px;z-index:0;padding:1px}
+.ac.teal::before{background:conic-gradient(from var(--angle),transparent 70%,var(--teal),transparent 30%);animation:borderRotate 4s linear infinite}
+.ac.blue::before{background:conic-gradient(from var(--angle),transparent 70%,var(--blue),transparent 30%);animation:borderRotate 5s linear infinite}
+.ac.purple::before{background:conic-gradient(from var(--angle),transparent 70%,var(--purple),transparent 30%);animation:borderRotate 4.5s linear infinite}
+.ac.orange::before{background:conic-gradient(from var(--angle),transparent 70%,var(--orange),transparent 30%);animation:borderRotate 3.8s linear infinite}
+.ac-inner{position:relative;z-index:1;background:var(--s1);border-radius:17px;overflow:hidden;height:100%}
+
+/* card top strip */
+.ac-strip{height:3px}
+.teal .ac-strip{background:linear-gradient(90deg,var(--teal),var(--blue),transparent)}
+.blue .ac-strip{background:linear-gradient(90deg,var(--blue),var(--purple),transparent)}
+.purple .ac-strip{background:linear-gradient(90deg,var(--purple),var(--orange),transparent)}
+.orange .ac-strip{background:linear-gradient(90deg,var(--orange),var(--teal),transparent)}
+
+/* corner glow */
+.ac-corner-glow{position:absolute;top:-30px;left:-30px;width:120px;height:120px;border-radius:50%;pointer-events:none;z-index:0}
+.teal .ac-corner-glow{background:radial-gradient(circle,var(--tealg),transparent 70%)}
+.blue .ac-corner-glow{background:radial-gradient(circle,var(--blueg),transparent 70%)}
+.purple .ac-corner-glow{background:radial-gradient(circle,var(--purpleg),transparent 70%)}
+.orange .ac-corner-glow{background:radial-gradient(circle,var(--orangeg),transparent 70%)}
+
+.ac-head{padding:18px 18px 14px;border-bottom:1px solid var(--b1);position:relative;z-index:1}
+.ac-head-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.ac-num{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:4px}
+.teal .ac-num{color:var(--teal)} .blue .ac-num{color:var(--blue)} .purple .ac-num{color:var(--purple)} .orange .ac-num{color:var(--orange)}
+.ac-name{font-size:13.5px;font-weight:700;letter-spacing:-0.01em;line-height:1.25}
+.live-pill{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.1em;color:var(--green);background:var(--greend);border:1px solid rgba(57,255,138,0.2);padding:3px 9px;border-radius:20px;white-space:nowrap}
+.live-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.ac-desc{font-size:11px;color:var(--t2);line-height:1.7}
+
+/* tech strip */
+.ac-tech{padding:12px 18px;border-bottom:1px solid var(--b1);display:flex;flex-wrap:wrap;gap:4px;position:relative;z-index:1}
+.tb{font-family:var(--mono);font-size:9px;font-weight:500;padding:2.5px 7px;border-radius:4px;border:1px solid;letter-spacing:0.02em}
+.teal .tb{color:var(--teal);border-color:rgba(0,255,204,0.18);background:rgba(0,255,204,0.05)}
+.blue .tb{color:var(--blue);border-color:rgba(77,159,255,0.18);background:rgba(77,159,255,0.05)}
+.purple .tb{color:var(--purple);border-color:rgba(183,111,255,0.18);background:rgba(183,111,255,0.05)}
+.orange .tb{color:var(--orange);border-color:rgba(255,140,66,0.18);background:rgba(255,140,66,0.05)}
+
+/* endpoints */
+.ac-eps{padding:12px 18px;border-bottom:1px solid var(--b1);position:relative;z-index:1}
+.ac-eps-title{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--t3);margin-bottom:9px}
+.ep{display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.ep:last-child{border-bottom:none}
+.epm{font-family:var(--mono);font-size:7.5px;font-weight:700;padding:2px 5px;border-radius:3px;min-width:32px;text-align:center;letter-spacing:0.05em}
+.epm.get{background:rgba(57,255,138,0.1);color:var(--green);border:1px solid rgba(57,255,138,0.18)}
+.epm.post{background:rgba(77,159,255,0.1);color:var(--blue);border:1px solid rgba(77,159,255,0.18)}
+.epp{font-family:var(--mono);font-size:10px;color:var(--txt);flex:1}
+.epd{font-size:9.5px;color:var(--t3)}
+
+/* metrics */
+.ac-metrics{padding:12px 18px;display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:1}
+.metric{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:9px 11px}
+.mv{font-family:var(--mono);font-size:15px;font-weight:700;line-height:1;margin-bottom:3px}
+.teal .mv{color:var(--teal)} .blue .mv{color:var(--blue)} .purple .mv{color:var(--purple)} .orange .mv{color:var(--orange)}
+.mk{font-size:9.5px;color:var(--t3);line-height:1.3}
+
+/* url bar */
+.ac-url{padding:9px 18px;background:var(--s2);display:flex;align-items:center;gap:8px;border-top:1px solid var(--b1);position:relative;z-index:1}
+.udot{width:6px;height:6px;border-radius:50%;flex-shrink:0;animation:pulse 2s infinite}
+.teal .udot{background:var(--teal);box-shadow:0 0 6px var(--teal)}
+.blue .udot{background:var(--blue);box-shadow:0 0 6px var(--blue)}
+.purple .udot{background:var(--purple);box-shadow:0 0 6px var(--purple)}
+.orange .udot{background:var(--orange);box-shadow:0 0 6px var(--orange)}
+.utxt{font-family:var(--mono);font-size:9px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ══ PIPELINE ══ */
+.pipeline-card{background:var(--s1);border:1px solid var(--b2);border-radius:18px;padding:28px 30px;position:relative;overflow:hidden;margin-bottom:6px}
+.pipeline-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--blue),var(--purple),var(--orange))}
+.pipeline-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(255,140,66,0.04),transparent 60%);pointer-events:none}
+
+.p-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.p-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.p-sub{font-family:var(--mono);font-size:10px;color:var(--t3)}
+.p-badge{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--orange);background:var(--oranged);border:1px solid rgba(255,140,66,0.2);padding:4px 14px;border-radius:20px}
+
+.pflow{display:grid;grid-template-columns:1fr 50px 1fr 50px 1fr 50px 1fr;align-items:center;margin-bottom:22px}
+.pstep{background:var(--s2);border:1px solid var(--b2);border-radius:12px;padding:16px 15px;position:relative;overflow:hidden}
+.pstep::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px}
+.pstep:nth-child(1)::before{background:linear-gradient(180deg,var(--teal),transparent)}
+.pstep:nth-child(3)::before{background:linear-gradient(180deg,var(--blue),transparent)}
+.pstep:nth-child(5)::before{background:linear-gradient(180deg,var(--purple),transparent)}
+.pstep:nth-child(7)::before{background:linear-gradient(180deg,var(--orange),transparent)}
+.ps-num{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--t3);margin-bottom:7px}
+.ps-icon{font-size:22px;margin-bottom:8px}
+.ps-name{font-size:12px;font-weight:700;margin-bottom:8px;line-height:1.3}
+.ps-task{font-size:10px;color:var(--t2);line-height:1.9;display:flex;align-items:center;gap:6px}
+.ps-task::before{content:'›';color:var(--orange);font-size:10px;flex-shrink:0}
+
+.parrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0 4px}
+.parrow-pipe{width:100%;height:2px;background:linear-gradient(90deg,rgba(255,140,66,0.15),rgba(255,140,66,0.5),rgba(255,140,66,0.15));position:relative;overflow:hidden}
+.parrow-pipe::after{content:'';position:absolute;top:-1px;left:-100%;width:50%;height:4px;background:linear-gradient(90deg,transparent,var(--orange),transparent);animation:flow 2s linear infinite}
+@keyframes flow{0%{left:-50%}100%{left:100%}}
+.parrow-head{width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid rgba(255,140,66,0.6)}
+.parrow-lbl{font-family:var(--mono);font-size:7.5px;color:var(--t3);white-space:nowrap;letter-spacing:0.05em}
+
+.p-out{border-top:1px solid var(--b1);padding-top:18px;display:flex;align-items:center;gap:14px}
+.p-out-label{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--t3);white-space:nowrap}
+.p-chips{display:flex;flex-wrap:wrap;gap:7px}
+.pchip{font-family:var(--mono);font-size:9.5px;padding:4px 12px;border-radius:6px;border:1px solid var(--b2);color:var(--t2);background:var(--s2);display:flex;align-items:center;gap:6px}
+.pchip::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--orange);opacity:0.5;flex-shrink:0}
+
+/* ══ SHARED INTELLIGENCE ══ */
+.intel-card{background:var(--s1);border:1px solid var(--b2);border-radius:18px;padding:24px 30px;margin-bottom:6px;position:relative;overflow:hidden}
+.intel-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,255,204,0.04),transparent 60%);pointer-events:none}
+.intel-grid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;gap:0;align-items:center;position:relative;z-index:1}
+.intel-div{background:var(--b2);height:52px;align-self:center}
+.ibox{padding:0 24px;display:flex;align-items:center;gap:14px}
+.ibox-icon{width:46px;height:46px;border-radius:12px;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.iname{font-size:13px;font-weight:700;margin-bottom:3px}
+.idetail{font-family:var(--mono);font-size:9.5px;color:var(--t3);line-height:1.6}
+.istat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 24px}
+.istat{text-align:center}
+.isv{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--teal);line-height:1;margin-bottom:2px}
+.isk{font-size:9.5px;color:var(--t3)}
+
+/* ══ INFRA ══ */
+.infra-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:6px}
+.ifcard{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:16px 15px;display:flex;align-items:center;gap:12px}
+.if-icon{font-size:22px;flex-shrink:0}
+.if-name{font-size:12px;font-weight:700;margin-bottom:2px}
+.if-detail{font-family:var(--mono);font-size:9.5px;color:var(--t3);line-height:1.55}
+
+/* ══ OUTPUT ══ */
+.output-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px}
+.out-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:15px 16px;display:flex;align-items:center;gap:12px}
+.out-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.out-icon.teal{background:var(--teald);border:1px solid rgba(0,255,204,0.12)}
+.out-icon.blue{background:var(--blued);border:1px solid rgba(77,159,255,0.12)}
+.out-icon.purple{background:var(--purpled);border:1px solid rgba(183,111,255,0.12)}
+.out-icon.orange{background:var(--oranged);border:1px solid rgba(255,140,66,0.12)}
+.out-type{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px}
+.out-type.teal{color:var(--teal)} .out-type.blue{color:var(--blue)} .out-type.purple{color:var(--purple)} .out-type.orange{color:var(--orange)}
+.out-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.out-detail{font-family:var(--mono);font-size:9.5px;color:var(--t3)}
+
+/* ══ FOOTER ══ */
+.footer{border-top:1px solid var(--b1);padding-top:28px;display:flex;align-items:center;justify-content:space-between}
+.fn{font-size:16px;font-weight:700;margin-bottom:2px}
+.fr{font-family:var(--mono);font-size:10px;color:var(--t3)}
+.flinks{display:flex;gap:8px}
+.fl{font-family:var(--mono);font-size:9.5px;color:var(--teal);background:var(--teald);border:1px solid rgba(0,255,204,0.18);padding:5px 14px;border-radius:20px;text-decoration:none;transition:all 0.2s}
+.fl:hover{background:var(--teal);color:var(--bg)}
+.f-right{font-family:var(--mono);font-size:10px;color:var(--t3);text-align:right;line-height:1.8}
+
+/* ══ GLOW TEXT ══ */
+.glow-teal{color:var(--teal);text-shadow:0 0 12px rgba(0,255,204,0.4)}
+.glow-blue{color:var(--blue);text-shadow:0 0 12px rgba(77,159,255,0.4)}
+.glow-purple{color:var(--purple);text-shadow:0 0 12px rgba(183,111,255,0.4)}
+.glow-orange{color:var(--orange);text-shadow:0 0 12px rgba(255,140,66,0.4)}
+
+/* spacer */
+.sp{height:14px}
+</style>
+</head>
+<body>
+
+<div class="bg-wrap">
+  <div class="hex-grid"></div>
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+  <div class="bg-orb orb3"></div>
+  <div class="scan-line"></div>
+</div>
+
+<div class="page">
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="header">
+  <div class="h-left">
+    <div class="h-eyebrow">
+      <span class="h-tag">System Architecture</span>
+      <span class="h-version">// ai-engineering-portfolio-v1.0</span>
+    </div>
+    <h1 class="h-title">Hans Stewart<br><span class="accent">AI Agent Portfolio</span></h1>
+    <div class="h-sub">4 production systems &nbsp;·&nbsp; Python 3.11 &nbsp;·&nbsp; GPT-4o &nbsp;·&nbsp; Google Cloud Run &nbsp;·&nbsp; CrewAI</div>
+  </div>
+  <div class="h-right">
+    <div class="hstat"><div class="hv">4</div><div class="hk">Live Agents</div></div>
+    <div class="hstat"><div class="hv">4</div><div class="hk">GCP Services</div></div>
+    <div class="hstat"><div class="hv">14</div><div class="hk">API Endpoints</div></div>
+    <div class="hstat"><div class="hv">GPT-4o</div><div class="hk">Core LLM</div></div>
+  </div>
+</div>
+
+<!-- ══════════ L1: INPUTS ══════════ -->
+<div class="ll"><span class="ll-tag">01 &nbsp;·&nbsp; Data Inputs</span><div class="ll-line"></div></div>
+<div class="input-grid">
+  <div class="in-card">
+    <div class="in-icon teal">📁</div>
+    <div><div class="in-label teal">Agent 01</div><div class="in-name">CSV Datasets</div><div class="in-detail">multipart/form-data upload</div></div>
+  </div>
+  <div class="in-card">
+    <div class="in-icon blue">📄</div>
+    <div><div class="in-label blue">Agent 02</div><div class="in-name">Text Documents</div><div class="in-detail">.txt → FAISS vector chunks</div></div>
+  </div>
+  <div class="in-card">
+    <div class="in-icon purple">👥</div>
+    <div><div class="in-label purple">Agent 03</div><div class="in-name">HubSpot CRM Data</div><div class="in-detail">Live API · contacts + deals</div></div>
+  </div>
+  <div class="in-card">
+    <div class="in-icon orange">💡</div>
+    <div><div class="in-label orange">Agent 04</div><div class="in-name">Research Topics</div><div class="in-detail">JSON body · any topic string</div></div>
+  </div>
+</div>
+
+<!-- BRIDGE DOWN -->
+<div class="sp"></div>
+<div class="bridge" style="height:42px">
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
+  <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
+  <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
+  <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+</div>
+<div class="sp"></div>
+
+<!-- ══════════ L2: AGENTS ══════════ -->
+<div class="ll"><span class="ll-tag">02 &nbsp;·&nbsp; AI Agent Systems</span><div class="ll-line"></div></div>
+<div class="agents-grid">
+
+  <!-- AGENT 1 -->
+  <div class="ac teal"><div class="ac-inner">
+    <div class="ac-corner-glow"></div>
+    <div class="ac-strip"></div>
+    <div class="ac-head">
+      <div class="ac-head-row">
+        <div><div class="ac-num">Agent 01</div><div class="ac-name">AI Data Agent</div></div>
+        <div class="live-pill">LIVE</div>
+      </div>
+      <div class="ac-desc">Accepts any CSV dataset, runs Pandas structural analysis — dtypes, null counts, describe(), head() — builds a detailed context summary, and routes to GPT-4o for pattern recognition, anomaly detection &amp; business recommendations. Results exported to live Tableau Public dashboard.</div>
+    </div>
+    <div class="ac-tech">
+      <span class="tb">Python 3.11</span><span class="tb">Flask</span><span class="tb">GPT-4o</span><span class="tb">Pandas</span><span class="tb">Tableau</span><span class="tb">Gunicorn</span>
+    </div>
+    <div class="ac-eps">
+      <div class="ac-eps-title">REST Endpoints</div>
+      <div class="ep"><span class="epm get">GET</span><span class="epp">/</span><span class="epd">Health check</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/analyze</span><span class="epd">CSV → GPT-4o insights</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/export</span><span class="epd">Tableau CSV export</span></div>
+    </div>
+    <div class="ac-metrics">
+      <div class="metric"><div class="mv">1000</div><div class="mk">max_tokens / run</div></div>
+      <div class="metric"><div class="mv">CSV</div><div class="mk">input format</div></div>
+      <div class="metric"><div class="mv">JSON</div><div class="mk">output format</div></div>
+      <div class="metric"><div class="mv">Live ✓</div><div class="mk">Tableau dashboard</div></div>
+    </div>
+    <div class="ac-url"><div class="udot"></div><div class="utxt">ai-data-agent-559169459241.us-east1.run.app</div></div>
+  </div></div>
+
+  <!-- AGENT 2 -->
+  <div class="ac blue"><div class="ac-inner">
+    <div class="ac-corner-glow"></div>
+    <div class="ac-strip"></div>
+    <div class="ac-head">
+      <div class="ac-head-row">
+        <div><div class="ac-num">Agent 02</div><div class="ac-name">RAG Document Intelligence</div></div>
+        <div class="live-pill">LIVE</div>
+      </div>
+      <div class="ac-desc">Ingests documents into a FAISS vector index via OpenAI embeddings. Performs cosine similarity search retrieving top-K chunks. Enforces strict context-only answering with [Source X] citations. Two-pass agentic loop: theme extraction → full structured 5-section report.</div>
+    </div>
+    <div class="ac-tech">
+      <span class="tb">Python 3.11</span><span class="tb">Flask</span><span class="tb">GPT-4o</span><span class="tb">FAISS</span><span class="tb">Embeddings</span><span class="tb">Vector Search</span>
+    </div>
+    <div class="ac-eps">
+      <div class="ac-eps-title">REST Endpoints</div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/upload</span><span class="epd">Doc → FAISS index</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/ask</span><span class="epd">Q&amp;A with citations</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/analyze</span><span class="epd">2-pass theme report</span></div>
+    </div>
+    <div class="ac-metrics">
+      <div class="metric"><div class="mv">Top-5</div><div class="mk">chunks per Q&amp;A</div></div>
+      <div class="metric"><div class="mv">Top-8</div><div class="mk">chunks deep analysis</div></div>
+      <div class="metric"><div class="mv">2-pass</div><div class="mk">agentic chain</div></div>
+      <div class="metric"><div class="mv">FAISS</div><div class="mk">vector store</div></div>
+    </div>
+    <div class="ac-url"><div class="udot"></div><div class="utxt">rag-agent-559169459241.us-east1.run.app</div></div>
+  </div></div>
+
+  <!-- AGENT 3 -->
+  <div class="ac purple"><div class="ac-inner">
+    <div class="ac-corner-glow"></div>
+    <div class="ac-strip"></div>
+    <div class="ac-head">
+      <div class="ac-head-row">
+        <div><div class="ac-num">Agent 03</div><div class="ac-name">CRM Automation Agent</div></div>
+        <div class="live-pill">LIVE</div>
+      </div>
+      <div class="ac-desc">Live HubSpot CRM integration via Private Apps API. Deterministic rule-based scoring engine (0–100pts) across 5 dimensions: job title, lead status, email, phone, company. GPT-4o generates personalized 3-email outreach sequences and full pipeline revenue forecasts.</div>
+    </div>
+    <div class="ac-tech">
+      <span class="tb">Python 3.11</span><span class="tb">Flask</span><span class="tb">GPT-4o</span><span class="tb">HubSpot API</span><span class="tb">Lead Scoring</span><span class="tb">Email Gen</span>
+    </div>
+    <div class="ac-eps">
+      <div class="ac-eps-title">REST Endpoints (7 total)</div>
+      <div class="ep"><span class="epm get">GET</span><span class="epp">/contacts</span><span class="epd">Fetch + score all</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/analyze</span><span class="epd">GPT-4o contact analysis</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/email-sequence</span><span class="epd">3-email outreach gen</span></div>
+    </div>
+    <div class="ac-metrics">
+      <div class="metric"><div class="mv">0–100</div><div class="mk">lead score range</div></div>
+      <div class="metric"><div class="mv">5</div><div class="mk">scoring dimensions</div></div>
+      <div class="metric"><div class="mv">3</div><div class="mk">emails / sequence</div></div>
+      <div class="metric"><div class="mv">7</div><div class="mk">REST endpoints</div></div>
+    </div>
+    <div class="ac-url"><div class="udot"></div><div class="utxt">crm-agent-559169459241.us-east1.run.app</div></div>
+  </div></div>
+
+  <!-- AGENT 4 -->
+  <div class="ac orange"><div class="ac-inner">
+    <div class="ac-corner-glow"></div>
+    <div class="ac-strip"></div>
+    <div class="ac-head">
+      <div class="ac-head-row">
+        <div><div class="ac-num">Agent 04</div><div class="ac-name">Multi-Agent BI System</div></div>
+        <div class="live-pill">LIVE</div>
+      </div>
+      <div class="ac-desc">Orchestrates 4 specialized GPT-4o agents in a sequential CrewAI pipeline. Each agent passes full output as context to the next. Full pipeline: 4 agents, 4 tasks, ~4 min. Quick mode: 2 agents, 2 tasks, ~2 min. Output: 6-section executive intelligence report.</div>
+    </div>
+    <div class="ac-tech">
+      <span class="tb">Python 3.11</span><span class="tb">CrewAI 0.80</span><span class="tb">GPT-4o</span><span class="tb">Flask</span><span class="tb">Sequential</span><span class="tb">Context Chain</span>
+    </div>
+    <div class="ac-eps">
+      <div class="ac-eps-title">REST Endpoints</div>
+      <div class="ep"><span class="epm get">GET</span><span class="epp">/</span><span class="epd">Health + agent manifest</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/analyze</span><span class="epd">Full 4-agent pipeline</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/quick-analyze</span><span class="epd">Fast 2-agent mode</span></div>
+    </div>
+    <div class="ac-metrics">
+      <div class="metric"><div class="mv">4</div><div class="mk">agents in pipeline</div></div>
+      <div class="metric"><div class="mv">4</div><div class="mk">chained tasks</div></div>
+      <div class="metric"><div class="mv">6</div><div class="mk">report sections</div></div>
+      <div class="metric"><div class="mv">~4 min</div><div class="mk">full pipeline</div></div>
+    </div>
+    <div class="ac-url"><div class="udot"></div><div class="utxt">multi-agent-559169459241.us-east1.run.app</div></div>
+  </div></div>
+
+</div>
+
+<!-- BRIDGE DOWN -->
+<div class="sp"></div>
+<div class="bridge" style="height:38px">
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
+  <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
+  <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
+  <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+</div>
+<div class="sp"></div>
+
+<!-- ══════════ L3: CREWAI PIPELINE ══════════ -->
+<div class="ll"><span class="ll-tag">03 &nbsp;·&nbsp; CrewAI Sequential Pipeline — Agent 04 Internals</span><div class="ll-line"></div></div>
+<div class="pipeline-card">
+  <div class="p-head">
+    <div>
+      <div class="p-title">Multi-Agent Orchestration — Sequential Context Chaining</div>
+      <div class="p-sub">crewai &nbsp;·&nbsp; Process.sequential &nbsp;·&nbsp; max_iter=3 per agent &nbsp;·&nbsp; verbose=True &nbsp;·&nbsp; context passed downstream after every task</div>
+    </div>
+    <div class="p-badge">CrewAI Framework</div>
+  </div>
+  <div class="pflow">
+    <div class="pstep">
+      <div class="ps-num">Step 01 of 04</div>
+      <div class="ps-icon">🔬</div>
+      <div class="ps-name">Senior Research Analyst</div>
+      <div class="ps-task">Key facts &amp; current state</div>
+      <div class="ps-task">Major trends (2024–2026)</div>
+      <div class="ps-task">Stakeholders &amp; players</div>
+      <div class="ps-task">Challenges &amp; opportunities</div>
+      <div class="ps-task">Data, stats &amp; metrics</div>
+    </div>
+    <div class="parrow">
+      <div class="parrow-pipe"></div>
+      <div class="parrow-head"></div>
+      <div class="parrow-lbl">context →</div>
+    </div>
+    <div class="pstep">
+      <div class="ps-num">Step 02 of 04</div>
+      <div class="ps-icon">📊</div>
+      <div class="ps-name">BI Analyst</div>
+      <div class="ps-task">3–5 key insights</div>
+      <div class="ps-task">Pattern recognition</div>
+      <div class="ps-task">Risk assessment</div>
+      <div class="ps-task">Business implications</div>
+      <div class="ps-task">Data-driven conclusions</div>
+    </div>
+    <div class="parrow">
+      <div class="parrow-pipe"></div>
+      <div class="parrow-head"></div>
+      <div class="parrow-lbl">context →</div>
+    </div>
+    <div class="pstep">
+      <div class="ps-num">Step 03 of 04</div>
+      <div class="ps-icon">✍️</div>
+      <div class="ps-name">Report Writer</div>
+      <div class="ps-task">Executive Summary</div>
+      <div class="ps-task">Market Overview</div>
+      <div class="ps-task">Key Findings</div>
+      <div class="ps-task">Strategic Analysis</div>
+      <div class="ps-task">Recommendations</div>
+    </div>
+    <div class="parrow">
+      <div class="parrow-pipe"></div>
+      <div class="parrow-head"></div>
+      <div class="parrow-lbl">context →</div>
+    </div>
+    <div class="pstep">
+      <div class="ps-num">Step 04 of 04</div>
+      <div class="ps-icon">✅</div>
+      <div class="ps-name">QA Specialist</div>
+      <div class="ps-task">Accuracy review</div>
+      <div class="ps-task">Logical flow check</div>
+      <div class="ps-task">Clarity &amp; readability</div>
+      <div class="ps-task">Completeness audit</div>
+      <div class="ps-task">Final polish pass</div>
+    </div>
+  </div>
+  <div class="p-out">
+    <div class="p-out-label">Final Output →</div>
+    <div class="p-chips">
+      <div class="pchip">Executive Summary</div>
+      <div class="pchip">Market Overview</div>
+      <div class="pchip">Key Findings</div>
+      <div class="pchip">Strategic Analysis</div>
+      <div class="pchip">Recommendations</div>
+      <div class="pchip">Conclusion</div>
+      <div class="pchip">execution_time_seconds</div>
+      <div class="pchip">agents_used[ ]</div>
+      <div class="pchip">tasks_completed</div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE DOWN (converging) -->
+<div class="sp"></div>
+<div class="bridge" style="height:36px">
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
+  <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
+  <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
+  <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+</div>
+<div class="sp"></div>
+
+<!-- ══════════ L4: SHARED INTELLIGENCE ══════════ -->
+<div class="ll"><span class="ll-tag">04 &nbsp;·&nbsp; Shared Intelligence Layer</span><div class="ll-line"></div></div>
+<div class="intel-card">
+  <div class="intel-grid">
+    <div class="ibox">
+      <div class="ibox-icon">🤖</div>
+      <div><div class="iname glow-teal">OpenAI GPT-4o</div><div class="idetail">Core reasoning engine<br>Powers all 4 agents<br>model="gpt-4o"</div></div>
+    </div>
+    <div class="intel-div"></div>
+    <div class="istat-grid">
+      <div class="istat"><div class="isv">4</div><div class="isk">agents powered</div></div>
+      <div class="istat"><div class="isv">128K</div><div class="isk">context window</div></div>
+      <div class="istat"><div class="isv">GPT-4o</div><div class="isk">model version</div></div>
+    </div>
+    <div class="intel-div"></div>
+    <div class="ibox">
+      <div class="ibox-icon">🔢</div>
+      <div><div class="iname glow-blue">OpenAI Embeddings</div><div class="idetail">text-embedding-ada-002<br>RAG Agent only<br>Cosine similarity search</div></div>
+    </div>
+    <div class="intel-div"></div>
+    <div class="ibox">
+      <div class="ibox-icon">🗄️</div>
+      <div><div class="iname glow-purple">FAISS Vector Store</div><div class="idetail">In-memory index<br>Top-K nearest neighbor<br>No external DB needed</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE DOWN -->
+<div class="sp"></div>
+<div class="bridge" style="height:36px">
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
+  <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
+  <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
+  <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+</div>
+<div class="sp"></div>
+
+<!-- ══════════ L5: INFRA ══════════ -->
+<div class="ll"><span class="ll-tag">05 &nbsp;·&nbsp; Cloud Infrastructure</span><div class="ll-line"></div></div>
+<div class="infra-grid">
+  <div class="ifcard"><div class="if-icon">☁️</div><div><div class="if-name">Google Cloud Run</div><div class="if-detail">4 services · us-east1 region<br>Auto-scaling · 2Gi RAM each</div></div></div>
+  <div class="ifcard"><div class="if-icon">🐳</div><div><div class="if-name">Docker</div><div class="if-detail">python:3.11-slim base<br>gcc + g++ build deps</div></div></div>
+  <div class="ifcard"><div class="if-icon">⚡</div><div><div class="if-name">Cloud Build</div><div class="if-detail">Auto container build<br>gcloud run deploy</div></div></div>
+  <div class="ifcard"><div class="if-icon">🐙</div><div><div class="if-name">GitHub</div><div class="if-detail">4 public repos<br>github.com/HansStewart</div></div></div>
+  <div class="ifcard"><div class="if-icon">🔒</div><div><div class="if-name">Secret Management</div><div class="if-detail">GCP env vars · .env local<br>.gitignore on all secrets</div></div></div>
+</div>
+
+<!-- BRIDGE DOWN -->
+<div class="sp"></div>
+<div class="bridge" style="height:36px">
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
+  <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
+  <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
+  <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+</div>
+<div class="sp"></div>
+
+<!-- ══════════ L6: OUTPUTS ══════════ -->
+<div class="ll"><span class="ll-tag">06 &nbsp;·&nbsp; System Outputs</span><div class="ll-line"></div></div>
+<div class="output-grid">
+  <div class="out-card">
+    <div class="out-icon teal">📊</div>
+    <div><div class="out-type teal">Agent 01 Output</div><div class="out-name">Tableau Dashboard + JSON Insights</div><div class="out-detail">Live public dashboard · patterns · recommendations</div></div>
+  </div>
+  <div class="out-card">
+    <div class="out-icon blue">💬</div>
+    <div><div class="out-type blue">Agent 02 Output</div><div class="out-name">Cited Answers + Structured Reports</div><div class="out-detail">[Source X] citations · themes · 5-section report</div></div>
+  </div>
+  <div class="out-card">
+    <div class="out-icon purple">📧</div>
+    <div><div class="out-type purple">Agent 03 Output</div><div class="out-name">Scored Leads + Email Sequences</div><div class="out-detail">0–100 scores · 3-email sequences · pipeline report</div></div>
+  </div>
+  <div class="out-card">
+    <div class="out-icon orange">📋</div>
+    <div><div class="out-type orange">Agent 04 Output</div><div class="out-name">6-Section Executive BI Report</div><div class="out-detail">Full report · execution_time · agents_used</div></div>
+  </div>
+</div>
+
+<!-- SPACER -->
+<div style="height:44px"></div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<div class="footer">
+  <div>
+    <div class="fn">Hans Stewart</div>
+    <div class="fr">AI Automation &amp; Systems Architect &nbsp;·&nbsp; github.com/HansStewart</div>
+  </div>
+  <div class="flinks">
+    <a class="fl" href="https://github.com/HansStewart/ai-data-agent" target="_blank">ai-data-agent</a>
+    <a class="fl" href="https://github.com/HansStewart/rag-agent" target="_blank">rag-agent</a>
+    <a class="fl" href="https://github.com/HansStewart/crm-agent" target="_blank">crm-agent</a>
+    <a class="fl" href="https://github.com/HansStewart/multi-agent" target="_blank">multi-agent</a>
+  </div>
+  <div class="f-right">
+    <div style="color:var(--teal);font-family:var(--mono);font-size:11px;font-weight:700">AI Engineering Portfolio</div>
+    <div>GCP Project · ai-data-agent-hans</div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
