@@ -83,7 +83,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
 .ll-line{flex:1;height:1px;background:linear-gradient(90deg,var(--b2),transparent)}
 
 /* ══ FLOW BRIDGE ══ */
-.bridge{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:6px 0;position:relative}
+.bridge{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin:6px 0;position:relative}
 .bridge-col{display:flex;flex-direction:column;align-items:center;gap:0}
 .bridge-dot{width:8px;height:8px;border-radius:50%;border:2px solid}
 .bridge-dot.teal{border-color:var(--teal);background:rgba(0,255,204,0.2);box-shadow:0 0 8px var(--teal)}
@@ -108,7 +108,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
 .bridge-arrow.orange{border-top:8px solid rgba(255,140,66,0.5)}
 
 /* ══ INPUT LAYER ══ */
-.input-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px}
+.input-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:6px}
 .in-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px}
 .in-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
 .in-icon.teal{background:var(--teald);border:1px solid rgba(0,255,204,0.12)}
@@ -121,7 +121,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
 .in-detail{font-family:var(--mono);font-size:10px;color:var(--t3)}
 
 /* ══ AGENTS ══ */
-.agents-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:6px}
+.agents-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:6px}
 
 /* glowing border animation */
 @keyframes borderRotate{0%{--angle:0deg}100%{--angle:360deg}}
@@ -252,7 +252,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
 .if-detail{font-family:var(--mono);font-size:9.5px;color:var(--t3);line-height:1.55}
 
 /* ══ OUTPUT ══ */
-.output-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px}
+.output-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:6px}
 .out-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:15px 16px;display:flex;align-items:center;gap:12px}
 .out-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .out-icon.teal{background:var(--teald);border:1px solid rgba(0,255,204,0.12)}
@@ -303,11 +303,11 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
       <span class="h-version">// ai-engineering-portfolio-v1.0</span>
     </div>
     <h1 class="h-title">Hans Stewart<br><span class="accent">AI Agent Portfolio</span></h1>
-    <div class="h-sub">4 production systems &nbsp;·&nbsp; Python 3.11 &nbsp;·&nbsp; GPT-4o &nbsp;·&nbsp; Google Cloud Run &nbsp;·&nbsp; CrewAI</div>
+    <div class="h-sub">5 production systems &nbsp;·&nbsp; Python 3.11 &nbsp;·&nbsp; GPT-4o &nbsp;·&nbsp; Google Cloud Run &nbsp;·&nbsp; CrewAI</div>
   </div>
   <div class="h-right">
-    <div class="hstat"><div class="hv">4</div><div class="hk">Live Agents</div></div>
-    <div class="hstat"><div class="hv">4</div><div class="hk">GCP Services</div></div>
+    <div class="hstat"><div class="hv">5</div><div class="hk">Live Agents</div></div>
+    <div class="hstat"><div class="hv">5</div><div class="hk">GCP Services</div></div>
     <div class="hstat"><div class="hv">14</div><div class="hk">API Endpoints</div></div>
     <div class="hstat"><div class="hv">GPT-4o</div><div class="hk">Core LLM</div></div>
   </div>
@@ -332,6 +332,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
     <div class="in-icon orange">💡</div>
     <div><div class="in-label orange">Agent 04</div><div class="in-name">Research Topics</div><div class="in-detail">JSON body · any topic string</div></div>
   </div>
+  <div class="in-card">
+    <div class="in-icon" style="color:#00ffb2">🌐</div>
+    <div><div class="in-label" style="color:#00ffb2">Agent 05</div><div class="in-name">Website URL</div><div class="in-detail">JSON body · any public URL</div></div>
+  </div>
 </div>
 
 <!-- BRIDGE DOWN -->
@@ -341,6 +345,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
   <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
   <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
   <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
 </div>
 <div class="sp"></div>
 
@@ -463,6 +468,32 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
     </div>
     <div class="ac-url"><div class="udot"></div><div class="utxt">multi-agent-559169459241.us-east1.run.app</div></div>
   </div></div>
+  <div><div class="agent-card" style="--ac:#00ffb2">
+    <div class="ac-corner-glow"></div>
+    <div class="ac-strip" style="background:var(--teal)"></div>
+    <div class="ac-top">
+      <div class="ac-top-left">
+        <div class="ac-icon" style="background:rgba(0,255,178,0.1);color:#00ffb2">🔍</div>
+        <div><div class="ac-num" style="color:#00ffb2">Agent 05</div><div class="ac-name">Website Audit Agent</div></div>
+        <div class="live-pill">LIVE</div>
+      </div>
+    </div>
+    <div class="ac-body">
+      <div class="ac-desc">Accepts any public URL, runs a comprehensive SEO & UX audit — meta tags, headings, images, CTAs, performance signals, mobile readiness — and routes to GPT-4o for scoring, prioritized recommendations & executive summary. Results returned as structured JSON with an overall 0–100 grade.</div>
+    </div>
+    <div class="ac-eps">
+      <div class="ac-eps-title">REST Endpoints</div>
+      <div class="ep"><span class="epm get">GET</span><span class="epp">/</span><span class="epd">Health check</span></div>
+      <div class="ep"><span class="epm post">POST</span><span class="epp">/audit</span><span class="epd">URL → full SEO/UX audit</span></div>
+    </div>
+    <div class="ac-metrics">
+      <div class="metric"><div class="mv">12</div><div class="mk">audit categories</div></div>
+      <div class="metric"><div class="mv">0–100</div><div class="mk">overall grade</div></div>
+      <div class="metric"><div class="mv">GPT-4o</div><div class="mk">recommendation engine</div></div>
+      <div class="metric"><div class="mv">JSON</div><div class="mk">output format</div></div>
+    </div>
+    <div class="ac-url"><div class="udot" style="background:#00ffb2"></div><div class="utxt">website-audit-agent-559169459241.us-east1.run.app</div></div>
+  </div></div>
 
 </div>
 
@@ -473,6 +504,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
   <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
   <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
   <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
 </div>
 <div class="sp"></div>
 
@@ -566,6 +598,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
   <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
   <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
   <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
 </div>
 <div class="sp"></div>
 
@@ -603,16 +636,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
   <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
   <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
   <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
 </div>
 <div class="sp"></div>
 
 <!-- ══════════ L5: INFRA ══════════ -->
 <div class="ll"><span class="ll-tag">05 &nbsp;·&nbsp; Cloud Infrastructure</span><div class="ll-line"></div></div>
 <div class="infra-grid">
-  <div class="ifcard"><div class="if-icon">☁️</div><div><div class="if-name">Google Cloud Run</div><div class="if-detail">4 services · us-east1 region<br>Auto-scaling · 2Gi RAM each</div></div></div>
+  <div class="ifcard"><div class="if-icon">☁️</div><div><div class="if-name">Google Cloud Run</div><div class="if-detail">5 services · us-east1 region<br>Auto-scaling · 2Gi RAM each</div></div></div>
   <div class="ifcard"><div class="if-icon">🐳</div><div><div class="if-name">Docker</div><div class="if-detail">python:3.11-slim base<br>gcc + g++ build deps</div></div></div>
   <div class="ifcard"><div class="if-icon">⚡</div><div><div class="if-name">Cloud Build</div><div class="if-detail">Auto container build<br>gcloud run deploy</div></div></div>
-  <div class="ifcard"><div class="if-icon">🐙</div><div><div class="if-name">GitHub</div><div class="if-detail">4 public repos<br>github.com/HansStewart</div></div></div>
+  <div class="ifcard"><div class="if-icon">🐙</div><div><div class="if-name">GitHub</div><div class="if-detail">5 public repos<br>github.com/HansStewart</div></div></div>
   <div class="ifcard"><div class="if-icon">🔒</div><div><div class="if-name">Secret Management</div><div class="if-detail">GCP env vars · .env local<br>.gitignore on all secrets</div></div></div>
 </div>
 
@@ -623,6 +657,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
   <div class="bridge-col"><div class="bridge-dot blue"></div><div class="bridge-track blue"><div class="particle blue"></div></div><div class="bridge-arrow blue"></div></div>
   <div class="bridge-col"><div class="bridge-dot purple"></div><div class="bridge-track purple"><div class="particle purple"></div></div><div class="bridge-arrow purple"></div></div>
   <div class="bridge-col"><div class="bridge-dot orange"></div><div class="bridge-track orange"><div class="particle orange"></div></div><div class="bridge-arrow orange"></div></div>
+  <div class="bridge-col"><div class="bridge-dot teal"></div><div class="bridge-track teal"><div class="particle teal"></div></div><div class="bridge-arrow teal"></div></div>
 </div>
 <div class="sp"></div>
 
@@ -645,6 +680,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
     <div class="out-icon orange">📋</div>
     <div><div class="out-type orange">Agent 04 Output</div><div class="out-name">6-Section Executive BI Report</div><div class="out-detail">Full report · execution_time · agents_used</div></div>
   </div>
+  <div class="out-card">
+    <div style="font-size:20px">🌐</div>
+    <div><div class="out-type" style="color:#00ffb2">Agent 05 Output</div><div class="out-name">SEO/UX Audit Report + Grade</div><div class="out-detail">0–100 score · top priorities · GPT-4o summary</div></div>
+  </div>
 </div>
 
 <!-- SPACER -->
@@ -661,6 +700,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-width:150
     <a class="fl" href="https://github.com/HansStewart/rag-agent" target="_blank">rag-agent</a>
     <a class="fl" href="https://github.com/HansStewart/crm-agent" target="_blank">crm-agent</a>
     <a class="fl" href="https://github.com/HansStewart/multi-agent" target="_blank">multi-agent</a>
+    <a class="fl" href="https://github.com/HansStewart/website-audit-agent" target="_blank">website-audit-agent</a>
   </div>
   <div class="f-right">
     <div style="color:var(--teal);font-family:var(--mono);font-size:11px;font-weight:700">AI Engineering Portfolio</div>
