@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hans Stewart — AI Systems Architecture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Detailed backend workflows for Hans Stewart's autonomous agents, AI automations, and deployed production systems."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="page-background" aria-hidden="true">
+        <div class="bg-orb bg-orb--1"></div>
+        <div class="bg-orb bg-orb--2"></div>
+        <div class="bg-grid"></div>
+        <div class="bg-rail bg-rail--left"></div>
+        <div class="bg-rail bg-rail--right"></div>
+        <div class="bg-grain"></div>
+      </div>
+
+      <header class="site-header section section--hero is-visible">
+        <div class="site-header__inner">
+          <div class="site-header__copy">
+            <p class="site-header__eyebrow">Hans Stewart / Systems Architecture</p>
+            <h1 class="site-header__title">
+              Detailed backend workflows for deployed AI agents and automations
+            </h1>
+            <p class="site-header__summary">
+              A production architecture view of how each system operates internally — request intake,
+              preprocessing, model execution, orchestration logic, external integrations, output
+              structuring, and runtime delivery.
+            </p>
+          </div>
+
+          <div class="hero-panel">
+            <p class="hero-panel__kicker">Core runtime</p>
+            <ul class="hero-panel__list">
+              <li>Python backend services with API-first architecture</li>
+              <li>GPT-4o reasoning and generation layers across agents</li>
+              <li>CrewAI orchestration where multi-step agent handoff is required</li>
+              <li>Google Cloud Run deployment with health-checkable endpoints</li>
+            </ul>
+          </div>
+        </div>
+        <div class="site-header__divider"></div>
+      </header>
+
+      <main class="main-content">
+        <section class="intro-grid section" data-animate>
+          <article class="overview-card overview-card--wide">
+            <h2>Architecture focus</h2>
+            <p>
+              This page is organized by individual agent and automation. Each section shows the real
+              backend workflow for one system, including how data enters, how tools and models are
+              chained, what gets stored or passed forward, what integrations are triggered, and what
+              final output is returned.
+            </p>
+          </article>
+
+          <article class="overview-card">
+            <h2>Shared patterns</h2>
+            <ul class="plain-list">
+              <li>HTTP request or file input enters a Python service.</li>
+              <li>Validation and normalization happen before model execution.</li>
+              <li>GPT-4o handles reasoning, extraction, summarization, or generation.</li>
+              <li>Results are returned as structured JSON or written into business systems.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="agent-section section" id="website-audit-agent" data-animate>
+          <div class="agent-section__heading">
+            <div>
+              <p class="agent-kicker">Agent workflow</p>
+              <h2>Website Audit Agent</h2>
+              <p class="agent-tagline">
+                A single-call audit service that scrapes a live website, evaluates it with GPT-4o,
+                and returns a structured scored report with actionable recommendations.
+              </p>
+            </div>
+            <p class="agent-stack">Python · BeautifulSoup4 · GPT-4o · Flask · Cloud Run</p>
+          </div>
+
+          <div class="workflow-grid workflow-grid--4">
+            <article class="workflow-card" data-step="01">
+              <h3>Request gateway</h3>
+              <p class="workflow-lead">Accepts audit requests and validates the target before processing begins.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Receives a public URL from a REST request to the audit endpoint.</li>
+                <li>Validates the input format and confirms the URL can be processed.</li>
+                <li>Creates a request context with identifiers for traceability and logging.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Input</span>
+                <span class="value">Public website URL</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="02">
+              <h3>Extraction pipeline</h3>
+              <p class="workflow-lead">Scrapes the page and converts raw HTML into a structured content payload.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Fetches the target page and handles redirects or simple fetch failures.</li>
+                <li>Uses BeautifulSoup4 to extract title, headings, body content, metadata, and links.</li>
+                <li>Normalizes the page into a clean analysis-ready object.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Intermediate</span>
+                <span class="value">Structured page snapshot</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="03">
+              <h3>Audit reasoning layer</h3>
+              <p class="workflow-lead">Runs a consistent audit rubric through GPT-4o against the extracted website content.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Sends the structured snapshot to GPT-4o with the scoring framework.</li>
+                <li>Evaluates five audit dimensions and generates detailed commentary for each.</li>
+                <li>Produces business-facing improvement recommendations tied to specific findings.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Processing</span>
+                <span class="value">Scoring + recommendations</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="04">
+              <h3>Response assembly</h3>
+              <p class="workflow-lead">Packages results into a stable output schema ready for downstream applications.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Maps model output into a structured JSON response format.</li>
+                <li>Includes scores, narrative reasoning, and output-ready recommendations.</li>
+                <li>Returns a final payload suitable for dashboards, forms, and client reports.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Output</span>
+                <span class="value">Scored audit JSON</span>
+              </footer>
+            </article>
+          </div>
+
+          <div class="detail-bar">
+            <div><span>Failure handling</span><strong>Clear response paths for fetch, scrape, and parse failures.</strong></div>
+            <div><span>Observability</span><strong>Request IDs, response timing, and audit version metadata.</strong></div>
+            <div><span>Use case</span><strong>Fast prospect audits, internal review, and automated website QA.</strong></div>
+          </div>
+        </section>
+
+        <section class="agent-section section" id="ai-content-pipeline" data-animate>
+          <div class="agent-section__heading">
+            <div>
+              <p class="agent-kicker">Agent workflow</p>
+              <h2>AI Content Pipeline</h2>
+              <p class="agent-tagline">
+                A sequential multi-agent content workflow that turns a brief into a complete set of
+                campaign assets across multiple channels.
+              </p>
+            </div>
+            <p class="agent-stack">CrewAI · GPT-4o · Python · Flask</p>
+          </div>
+
+          <div class="workflow-grid workflow-grid--4">
+            <article class="workflow-card" data-step="01">
+              <h3>Brief intake</h3>
+              <p class="workflow-lead">Converts a simple prompt into a shared context for the entire pipeline run.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Receives a topic, target audience, and tone profile.</li>
+                <li>Validates required fields and standardizes the brief structure.</li>
+                <li>Initializes the CrewAI run context used by each downstream agent.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Input</span>
+                <span class="value">Topic · audience · tone</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="02">
+              <h3>Researcher agent</h3>
+              <p class="workflow-lead">Generates the strategic messaging foundation for all downstream content outputs.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Identifies pain points, messaging angles, and audience motivations.</li>
+                <li>Creates a structured insight layer that the next agents inherit.</li>
+                <li>Feeds a clean strategy context into copy generation.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Intermediate</span>
+                <span class="value">Angle map + research context</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="03">
+              <h3>Copywriter and editor</h3>
+              <p class="workflow-lead">Produces asset variants and then refines them for quality, flow, and consistency.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Creates email copy, LinkedIn content, blog outline, and ad variations.</li>
+                <li>Runs editorial refinement for clarity, persuasion, and tone alignment.</li>
+                <li>Preserves channel-specific formatting while maintaining one strategic voice.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Processing</span>
+                <span class="value">Generation + editorial QA</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="04">
+              <h3>Formatter agent</h3>
+              <p class="workflow-lead">Builds the final response object so the content can be used immediately.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Collects every agent output into one labeled content package.</li>
+                <li>Organizes the response into a predictable, publication-ready structure.</li>
+                <li>Returns a final bundle through the API for direct operational use.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Output</span>
+                <span class="value">Multi-channel content package</span>
+              </footer>
+            </article>
+          </div>
+
+          <div class="detail-bar">
+            <div><span>Orchestration</span><strong>Sequential CrewAI handoff with shared context persistence across roles.</strong></div>
+            <div><span>Consistency</span><strong>Unified message strategy across email, social, blog, and paid copy.</strong></div>
+            <div><span>Use case</span><strong>Rapid campaign production with one structured prompt.</strong></div>
+          </div>
+        </section>
+
+        <section class="agent-section section" id="voice-to-crm" data-animate>
+          <div class="agent-section__heading">
+            <div>
+              <p class="agent-kicker">Agent workflow</p>
+              <h2>Voice-to-CRM Agent</h2>
+              <p class="agent-tagline">
+                A transcription and CRM automation system that turns raw audio into clean contacts,
+                deals, notes, and follow-up actions inside HubSpot.
+              </p>
+            </div>
+            <p class="agent-stack">Whisper · GPT-4o · HubSpot API · Flask · Cloud Run</p>
+          </div>
+
+          <div class="workflow-grid workflow-grid--4">
+            <article class="workflow-card" data-step="01">
+              <h3>Audio intake</h3>
+              <p class="workflow-lead">Receives recorded calls, voicemails, and voice notes through an upload interface.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Accepts common audio formats such as mp3, mp4, wav, m4a, and webm.</li>
+                <li>Validates the upload and prepares it for transcription.</li>
+                <li>Creates request-level metadata for logging and response tracking.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Input</span>
+                <span class="value">Audio file upload</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="02">
+              <h3>Transcription layer</h3>
+              <p class="workflow-lead">Converts raw speech into a machine-usable transcript using Whisper.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Runs the uploaded audio through OpenAI Whisper.</li>
+                <li>Produces a normalized transcript ready for structured extraction.</li>
+                <li>Prepares the transcription payload for semantic CRM mapping.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Intermediate</span>
+                <span class="value">Call transcript</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="03">
+              <h3>CRM extraction engine</h3>
+              <p class="workflow-lead">Uses GPT-4o to translate transcript content into CRM-specific data objects.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Extracts contact identity, company, deal details, next steps, and context.</li>
+                <li>Maps the extracted content to the fields required by HubSpot.</li>
+                <li>Builds a structured object ready for CRM insertion or update.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Processing</span>
+                <span class="value">Transcript → CRM schema</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="04">
+              <h3>HubSpot writeback</h3>
+              <p class="workflow-lead">Writes the output into the CRM so the data becomes operational immediately.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Creates or updates the contact record in HubSpot.</li>
+                <li>Creates or updates the related deal record and stage context.</li>
+                <li>Logs notes and follow-up actions as timeline entries for the sales team.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Output</span>
+                <span class="value">Contact + deal + note + JSON summary</span>
+              </footer>
+            </article>
+          </div>
+
+          <div class="detail-bar">
+            <div><span>Operational value</span><strong>Eliminates manual CRM logging after calls and voicemails.</strong></div>
+            <div><span>Data quality</span><strong>Structured field extraction instead of freeform note entry.</strong></div>
+            <div><span>Use case</span><strong>Sales teams, operators, and voice-first CRM workflows.</strong></div>
+          </div>
+        </section>
+
+        <section class="agent-section section" id="pipeline-intelligence-agent" data-animate>
+          <div class="agent-section__heading">
+            <div>
+              <p class="agent-kicker">Agent workflow</p>
+              <h2>Pipeline Intelligence Agent</h2>
+              <p class="agent-tagline">
+                A sales-operations intelligence system that pulls live HubSpot deal data, analyzes it,
+                and returns a prioritized pipeline report with clear action paths.
+              </p>
+            </div>
+            <p class="agent-stack">HubSpot CRM v3 API · GPT-4o · Python · Cloud Run</p>
+          </div>
+
+          <div class="workflow-grid workflow-grid--4">
+            <article class="workflow-card" data-step="01">
+              <h3>HubSpot connection</h3>
+              <p class="workflow-lead">Establishes a live read path to the CRM for current pipeline state.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Authenticates against HubSpot CRM APIs.</li>
+                <li>Pulls active deals, stages, dates, values, and core pipeline metadata.</li>
+                <li>Collects the working dataset required for sales analysis.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Input</span>
+                <span class="value">Live CRM deal data</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="02">
+              <h3>Normalization layer</h3>
+              <p class="workflow-lead">Transforms raw CRM output into an analysis-ready intelligence dataset.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Standardizes stage values, dates, and probability context.</li>
+                <li>Highlights stale, overdue, or low-momentum opportunities.</li>
+                <li>Builds structured inputs for forecasting and prioritization.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Intermediate</span>
+                <span class="value">Clean pipeline dataset</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="03">
+              <h3>Intelligence generation</h3>
+              <p class="workflow-lead">Uses GPT-4o to turn the dataset into an actionable sales-ops report.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Calculates pipeline health and identifies risk patterns.</li>
+                <li>Generates weighted forecast logic and high-priority deal focus.</li>
+                <li>Produces recommended next actions for near-term execution.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Processing</span>
+                <span class="value">Health scoring + prioritization</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="04">
+              <h3>Report delivery</h3>
+              <p class="workflow-lead">Returns an executive-friendly report that can plug into dashboards and decision flows.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Packages forecast, risk flags, and priorities into structured output.</li>
+                <li>Returns a machine-usable response for BI and dashboard use.</li>
+                <li>Supports real-time pipeline review without manual analyst work.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Output</span>
+                <span class="value">Pipeline intelligence report</span>
+              </footer>
+            </article>
+          </div>
+
+          <div class="detail-bar">
+            <div><span>Primary value</span><strong>Automates a senior sales-ops style analysis workflow in real time.</strong></div>
+            <div><span>Decision support</span><strong>Clear flags for risk, forecast strength, and next-best actions.</strong></div>
+            <div><span>Use case</span><strong>Pipeline review, executive reporting, and team prioritization.</strong></div>
+          </div>
+        </section>
+
+        <section class="agent-section section" id="ai-data-agent" data-animate>
+          <div class="agent-section__heading">
+            <div>
+              <p class="agent-kicker">Agent workflow</p>
+              <h2>AI Data Agent</h2>
+              <p class="agent-tagline">
+                A data analysis service that ingests structured files, transforms them with Python,
+                and layers AI interpretation on top of the underlying numerical output.
+              </p>
+            </div>
+            <p class="agent-stack">Python · Pandas · GPT-4o · Flask</p>
+          </div>
+
+          <div class="workflow-grid workflow-grid--4">
+            <article class="workflow-card" data-step="01">
+              <h3>Data ingestion</h3>
+              <p class="workflow-lead">Receives structured source data and prepares it for computational analysis.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Accepts datasets or structured file payloads for analysis.</li>
+                <li>Loads the source into a Python data-processing environment.</li>
+                <li>Confirms the schema and prepares the dataset for transformation.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Input</span>
+                <span class="value">Structured data files</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="02">
+              <h3>Transformation layer</h3>
+              <p class="workflow-lead">Uses Pandas to clean, reshape, and normalize the raw dataset.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Handles cleaning, filtering, derived columns, and aggregation logic.</li>
+                <li>Prepares numerical outputs suitable for trend and summary analysis.</li>
+                <li>Creates a machine-readable analytical context for the model layer.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Intermediate</span>
+                <span class="value">Analysis-ready dataset</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="03">
+              <h3>AI interpretation</h3>
+              <p class="workflow-lead">Applies GPT-4o to explain patterns and convert numbers into usable business insight.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Summarizes trends, anomalies, and important relationships.</li>
+                <li>Turns raw numerical outputs into narrative decision support.</li>
+                <li>Produces AI-assisted insight tied to the transformed data.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Processing</span>
+                <span class="value">Pattern explanation + summaries</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="04">
+              <h3>Delivery layer</h3>
+              <p class="workflow-lead">Returns clean analytical output for reporting and BI consumption.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Packages outputs into API-ready structured results.</li>
+                <li>Supports external dashboards, reporting tools, and stakeholder summaries.</li>
+                <li>Acts as a reusable analysis endpoint across business workflows.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Output</span>
+                <span class="value">Analytical response payload</span>
+              </footer>
+            </article>
+          </div>
+
+          <div class="detail-bar">
+            <div><span>Computation</span><strong>Python and Pandas handle deterministic analysis before model reasoning begins.</strong></div>
+            <div><span>Interpretation</span><strong>GPT-4o explains what the numbers mean in business terms.</strong></div>
+            <div><span>Use case</span><strong>Internal BI workflows and analysis-heavy automation systems.</strong></div>
+          </div>
+        </section>
+
+        <section class="agent-section section" id="rag-agent" data-animate>
+          <div class="agent-section__heading">
+            <div>
+              <p class="agent-kicker">Agent workflow</p>
+              <h2>RAG Document Intelligence</h2>
+              <p class="agent-tagline">
+                A document question-answering system that indexes source content with embeddings,
+                retrieves relevant context with FAISS, and generates grounded answers with GPT-4o.
+              </p>
+            </div>
+            <p class="agent-stack">FAISS · OpenAI Embeddings · GPT-4o · Flask</p>
+          </div>
+
+          <div class="workflow-grid workflow-grid--4">
+            <article class="workflow-card" data-step="01">
+              <h3>Document ingestion</h3>
+              <p class="workflow-lead">Receives source documents and prepares them for retrieval indexing.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Accepts document content or uploaded source material.</li>
+                <li>Splits the material into manageable semantic chunks.</li>
+                <li>Builds the indexing-ready input set for embedding generation.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Input</span>
+                <span class="value">Documents + source text</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="02">
+              <h3>Vector indexing</h3>
+              <p class="workflow-lead">Creates semantic retrieval infrastructure so knowledge can be searched by meaning.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Generates embeddings for each chunk of the source set.</li>
+                <li>Stores the vectors in a FAISS index for fast retrieval.</li>
+                <li>Preserves document-to-chunk mapping for grounded answer generation.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Intermediate</span>
+                <span class="value">FAISS index + chunk map</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="03">
+              <h3>Retrieval layer</h3>
+              <p class="workflow-lead">Matches user questions against the indexed document space to find relevant context.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Embeds the query and searches the FAISS index for nearest matches.</li>
+                <li>Selects high-relevance chunks to support grounded response generation.</li>
+                <li>Packages retrieval results into the prompt context for the model.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Processing</span>
+                <span class="value">Query → retrieval context</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="04">
+              <h3>Answer generation</h3>
+              <p class="workflow-lead">Combines retrieved evidence with GPT-4o to produce grounded, source-aware answers.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Injects retrieved chunks into the model prompt as context.</li>
+                <li>Generates a response constrained by the indexed source material.</li>
+                <li>Returns a context-grounded answer through the API layer.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Output</span>
+                <span class="value">Grounded document answer</span>
+              </footer>
+            </article>
+          </div>
+
+          <div class="detail-bar">
+            <div><span>Retrieval pattern</span><strong>Chunking and embeddings separate knowledge storage from answer generation.</strong></div>
+            <div><span>Grounding</span><strong>Retrieved evidence constrains response quality and reduces hallucination risk.</strong></div>
+            <div><span>Use case</span><strong>Internal knowledge systems and private-document Q&A workflows.</strong></div>
+          </div>
+        </section>
+
+        <section class="agent-section section" id="crm-agent" data-animate>
+          <div class="agent-section__heading">
+            <div>
+              <p class="agent-kicker">Agent workflow</p>
+              <h2>CRM Automation Agent</h2>
+              <p class="agent-tagline">
+                A lead-scoring and CRM workflow service that evaluates contact quality, writes back
+                structured updates, and supports automated sales follow-up logic.
+              </p>
+            </div>
+            <p class="agent-stack">HubSpot API · GPT-4o · Lead Scoring · Flask</p>
+          </div>
+
+          <div class="workflow-grid workflow-grid--4">
+            <article class="workflow-card" data-step="01">
+              <h3>Record intake</h3>
+              <p class="workflow-lead">Receives lead and contact data from CRM-connected systems and workflow triggers.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Pulls or receives records requiring evaluation.</li>
+                <li>Loads profile attributes, engagement data, and available business context.</li>
+                <li>Builds the scoring input object used for AI-assisted prioritization.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Input</span>
+                <span class="value">Lead and contact records</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="02">
+              <h3>Lead evaluation</h3>
+              <p class="workflow-lead">Applies reasoning logic to determine lead quality, urgency, and follow-up direction.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Uses GPT-4o to assess fit, intent, and likelihood of sales progress.</li>
+                <li>Translates contextual signals into a structured scoring layer.</li>
+                <li>Determines whether the lead should be prioritized, nurtured, or routed differently.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Intermediate</span>
+                <span class="value">Score + action recommendation</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="03">
+              <h3>Automation actioning</h3>
+              <p class="workflow-lead">Turns scored evaluation into operational CRM actions and workflow decisions.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Triggers updates, flags, or downstream follow-up workflows.</li>
+                <li>Supports CRM enrichment and automated sales operations.</li>
+                <li>Ensures output can be consumed by human reps or workflow engines.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Processing</span>
+                <span class="value">Scoring → CRM workflow logic</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="04">
+              <h3>CRM writeback</h3>
+              <p class="workflow-lead">Writes the evaluated result back into HubSpot so the CRM stays operationally current.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Updates scores, fields, and follow-up metadata on the record.</li>
+                <li>Keeps the CRM as the source of truth for sales execution.</li>
+                <li>Returns a structured result confirming what changed.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Output</span>
+                <span class="value">CRM updates + score state</span>
+              </footer>
+            </article>
+          </div>
+
+          <div class="detail-bar">
+            <div><span>Primary benefit</span><strong>Automated lead triage without forcing reps to manually assess every record.</strong></div>
+            <div><span>Operational role</span><strong>Bridges AI evaluation and CRM-native workflow execution.</strong></div>
+            <div><span>Use case</span><strong>Lead routing, prioritization, enrichment, and nurture automation.</strong></div>
+          </div>
+        </section>
+
+        <section class="agent-section section" id="multi-agent" data-animate>
+          <div class="agent-section__heading">
+            <div>
+              <p class="agent-kicker">Agent workflow</p>
+              <h2>Multi-Agent BI System</h2>
+              <p class="agent-tagline">
+                A sequential business-intelligence workflow that orchestrates specialized GPT-4o
+                agents to produce a multi-section executive report from one research topic.
+              </p>
+            </div>
+            <p class="agent-stack">CrewAI · GPT-4o · Sequential Pipeline · Flask</p>
+          </div>
+
+          <div class="workflow-grid workflow-grid--4">
+            <article class="workflow-card" data-step="01">
+              <h3>Topic intake</h3>
+              <p class="workflow-lead">Creates the initial run state for a multi-agent research and intelligence workflow.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Receives a research or analysis topic through the API.</li>
+                <li>Builds the context object used across the entire pipeline.</li>
+                <li>Prepares the sequential execution chain for downstream agents.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Input</span>
+                <span class="value">Research topic</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="02">
+              <h3>Sequential orchestration</h3>
+              <p class="workflow-lead">Runs specialized agents in order so each stage inherits the full output of the last.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Uses CrewAI to coordinate sequential multi-agent execution.</li>
+                <li>Passes prior output forward as context instead of starting fresh each time.</li>
+                <li>Builds layered intelligence rather than isolated one-shot outputs.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Intermediate</span>
+                <span class="value">Cascading context chain</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="03">
+              <h3>Report assembly</h3>
+              <p class="workflow-lead">Compiles the outputs into a structured executive-style intelligence report.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Aggregates insights from each specialized agent stage.</li>
+                <li>Formats them into a consistent multi-section report architecture.</li>
+                <li>Ensures continuity and narrative coherence across sections.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Processing</span>
+                <span class="value">Multi-stage synthesis</span>
+              </footer>
+            </article>
+
+            <article class="workflow-card" data-step="04">
+              <h3>Final delivery</h3>
+              <p class="workflow-lead">Returns the completed intelligence package for strategic or executive use.</p>
+              <ul class="plain-list plain-list--tight">
+                <li>Outputs the report through the API in structured form.</li>
+                <li>Supports research synthesis, strategic reviews, and executive briefing workflows.</li>
+                <li>Creates a repeatable intelligence pipeline around one initial prompt.</li>
+              </ul>
+              <footer class="workflow-footer">
+                <span class="label">Output</span>
+                <span class="value">Executive intelligence report</span>
+              </footer>
+            </article>
+          </div>
+
+          <div class="detail-bar">
+            <div><span>Design pattern</span><strong>Sequential specialist agents outperform a single undifferentiated reasoning step.</strong></div>
+            <div><span>Context model</span><strong>Each stage inherits the full run context for cumulative intelligence generation.</strong></div>
+            <div><span>Use case</span><strong>Business research, strategic summaries, and high-context reporting.</strong></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
