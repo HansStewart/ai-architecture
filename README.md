@@ -1,133 +1,101 @@
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI Systems Architecture
 
-  AI SYSTEMS ARCHITECTURE
-  Detailed backend workflows for every deployed agent and automation.
-  by Hans Stewart · hansstewart.dev
+> A production architecture reference page showing the real backend workflows for every deployed AI agent and automation system.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**by Hans Stewart &nbsp;·&nbsp; [hansstewart.dev](https://hansstewart.dev)**
 
-  Live            →   hansstewart.github.io/ai-architecture
-  Portfolio       →   hansstewart.dev
-  GitHub          →   github.com/HansStewart/ai-architecture
+[Live Page](https://hansstewart.github.io/ai-architecture) &nbsp;·&nbsp; [Portfolio](https://hansstewart.dev) &nbsp;·&nbsp; [GitHub](https://github.com/HansStewart/ai-architecture)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-WHAT IT IS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+---
 
-  A production architecture reference page showing the real backend
-  workflows for every deployed AI agent and automation system. Not a
-  marketing overview — a technical walkthrough of how each system
-  operates internally.
+## What It Is
 
-  Each agent section documents: how requests enter the system,
-  how data is preprocessed and validated, how GPT-4o and other tools
-  are chained, what gets stored or passed forward between steps, what
-  external integrations are triggered, how output is structured, and
-  what is returned to the caller.
+A technical architecture reference — not a marketing overview. Each agent section documents how requests enter the system, how data is preprocessed and validated, how GPT-4o and other tools are chained, what gets stored or passed forward between steps, what external integrations are triggered, how output is structured, and what is returned to the caller.
 
+---
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-WHAT IS DOCUMENTED
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Agents Documented
 
-  Website Audit Agent         4-step scrape-evaluate-score-return workflow.
-                              Stack: Python · BeautifulSoup4 · GPT-4o ·
-                              Flask · Cloud Run
+| Agent | Stack |
+|---|---|
+| Website Audit Agent | Python · BeautifulSoup4 · GPT-4o · Flask · Cloud Run |
+| AI Content Pipeline | CrewAI · GPT-4o · Python · Flask |
+| Voice-to-CRM Agent | Whisper · GPT-4o · HubSpot API · Flask · Cloud Run |
+| Pipeline Intelligence Agent | HubSpot CRM v3 API · GPT-4o · Python · Cloud Run |
+| AI Data Agent | Python · Pandas · GPT-4o · Flask |
+| RAG Document Intelligence | FAISS · OpenAI Embeddings · GPT-4o · Flask |
+| CRM Automation Agent | HubSpot API · GPT-4o · Lead Scoring · Flask |
+| Multi-Agent BI System | CrewAI · GPT-4o · Sequential Pipeline · Flask |
 
-  AI Content Pipeline         Sequential CrewAI multi-agent workflow.
-                              Stack: CrewAI · GPT-4o · Python · Flask
+---
 
-  Voice-to-CRM Agent          Whisper transcription to HubSpot writeback.
-                              Stack: Whisper · GPT-4o · HubSpot API ·
-                              Flask · Cloud Run
+## Shared Patterns Across All Agents
 
-  Pipeline Intelligence Agent Live HubSpot data → pipeline report.
-                              Stack: HubSpot CRM v3 API · GPT-4o ·
-                              Python · Cloud Run
+- HTTP request or file input enters a Python service
+- Validation and normalization happen before model execution
+- GPT-4o handles reasoning, extraction, summarization, or generation
+- Results are returned as structured JSON or written into business systems
 
-  AI Data Agent               Pandas transforms + GPT-4o interpretation.
-                              Stack: Python · Pandas · GPT-4o · Flask
+---
 
-  RAG Document Intelligence   FAISS retrieval → grounded GPT-4o answers.
-                              Stack: FAISS · OpenAI Embeddings · GPT-4o ·
-                              Flask
+## Core Runtime
 
-  CRM Automation Agent        Lead scoring + HubSpot workflow automation.
-                              Stack: HubSpot API · GPT-4o · Lead Scoring ·
-                              Flask
+- Python backend services with API-first architecture
+- GPT-4o reasoning and generation layers across all agents
+- CrewAI orchestration where multi-step agent handoff is required
+- Google Cloud Run deployment with health-checkable endpoints
 
-  Multi-Agent BI System       CrewAI sequential pipeline → executive report.
-                              Stack: CrewAI · GPT-4o · Flask
+---
 
+## Tech Stack
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHARED PATTERNS ACROSS ALL AGENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+| Layer | Technology |
+|---|---|
+| Language | HTML / CSS / JavaScript |
+| Fonts | Space Grotesk, Space Mono (Google Fonts) |
+| Hosting | GitHub Pages |
+| Deployment | Auto-deploys on push to main |
 
-  HTTP request or file input enters a Python service.
-  Validation and normalization happen before model execution.
-  GPT-4o handles reasoning, extraction, summarization, or generation.
-  Results are returned as structured JSON or written into business
-  systems.
+---
 
+## Local Development
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CORE RUNTIME
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```bash
+git clone https://github.com/HansStewart/ai-architecture.git
+cd ai-architecture
+open index.html
+```
 
-  Python backend services with API-first architecture
-  GPT-4o reasoning and generation layers across all agents
-  CrewAI orchestration where multi-step agent handoff is required
-  Google Cloud Run deployment with health-checkable endpoints
+No build step. Pure static HTML/CSS/JS. Push to main — GitHub Pages deploys automatically.
 
+---
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-TECH STACK
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Project Structure
 
-  HTML / CSS / JavaScript    Static page — no framework, no build step
-  Fonts                      Space Grotesk, Space Mono (Google Fonts)
-  Hosting                    GitHub Pages
-  Deployment                 Auto-deploys on push to main
+```
+ai-architecture/
+├── index.html              Full architecture page
+├── style.css               Page styles and section layout
+└── .github/
+    └── workflows/
+        └── deploy.yml      GitHub Pages auto-deploy on push to main
+```
 
+---
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-LOCAL DEVELOPMENT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Full Agent Ecosystem
 
-  git clone https://github.com/HansStewart/ai-architecture.git
-  cd ai-architecture
-  open index.html
+| Agent | Repository |
+|---|---|
+| Website Audit Agent | [github.com/HansStewart/website-audit-agent](https://github.com/HansStewart/website-audit-agent) |
+| AI Content Pipeline | [github.com/HansStewart/ai-content-pipeline](https://github.com/HansStewart/ai-content-pipeline) |
+| Voice-to-CRM Agent | [github.com/HansStewart/voice-to-crm](https://github.com/HansStewart/voice-to-crm) |
+| Pipeline Intelligence Agent | [github.com/HansStewart/pipeline-intelligence-agent](https://github.com/HansStewart/pipeline-intelligence-agent) |
+| CRM Automation Agent | [github.com/HansStewart/crm-agent](https://github.com/HansStewart/crm-agent) |
+| Multi-Agent BI System | [github.com/HansStewart/multi-agent](https://github.com/HansStewart/multi-agent) |
+| AI Data Agent | [github.com/HansStewart/ai-data-agent](https://github.com/HansStewart/ai-data-agent) |
+| RAG Document Intelligence | [github.com/HansStewart/rag-agent](https://github.com/HansStewart/rag-agent) |
 
-  No build step. Pure static HTML/CSS/JS.
-  Push to main — GitHub Pages deploys automatically.
+---
 
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PROJECT STRUCTURE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  ai-architecture/
-  ├── index.html              Full architecture page
-  ├── style.css               Page styles and section layout
-  └── .github/
-      └── workflows/
-          └── deploy.yml      GitHub Pages auto-deploy on push to main
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FULL AGENT ECOSYSTEM
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  Website Audit Agent       →   github.com/HansStewart/website-audit-agent
-  AI Content Pipeline       →   github.com/HansStewart/ai-content-pipeline
-  Voice-to-CRM Agent        →   github.com/HansStewart/voice-to-crm
-  Pipeline Intelligence     →   github.com/HansStewart/pipeline-intelligence-agent
-  CRM Automation Agent      →   github.com/HansStewart/crm-agent
-  Multi-Agent BI System     →   github.com/HansStewart/multi-agent
-  AI Data Agent             →   github.com/HansStewart/ai-data-agent
-  RAG Document Intelligence →   github.com/HansStewart/rag-agent
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Hans Stewart · Marketing Automation Engineer · hansstewart.dev
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Hans Stewart &nbsp;·&nbsp; Marketing Automation Engineer &nbsp;·&nbsp; [hansstewart.dev](https://hansstewart.dev)**
